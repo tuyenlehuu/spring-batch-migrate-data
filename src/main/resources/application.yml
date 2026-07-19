@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: txn-history-migrator
+  batch:
+    jdbc:
+      initialize-schema: always
+    job:
+      enabled: true
+      name: migrateTxnHistoryJob
+
+app:
+  datasource:
+    source:
+      url: jdbc:postgresql://localhost:5432/core_db
+      username: core_user
+      password: core_password
+      driver-class-name: org.postgresql.Driver
+      hikari:
+        maximum-pool-size: 8
+        minimum-idle: 2
+
+migration:
+  chunk-size: 500
+  page-size: 500
+  fetch-size: 500
+  grid-size: 8
+  thread-pool-size: 8
+  source-table: transaction_history
+  service-a-upsert-url: http://localhost:8081/api/fin-txn/upsert
+  api-timeout: 30s
+
+logging:
+  level:
+    org.springframework.batch: INFO
