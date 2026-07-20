@@ -1,34 +1,17 @@
+server:
+  port: 8081
+
 spring:
-  application:
-    name: txn-history-migrator
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/demo_bank?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC}
+    username: ${DB_USER:root}
+    password: ${DB_PASSWORD:wTqmrp2YlzBoyMLsWIf4}
+    driver-class-name: com.mysql.cj.jdbc.Driver
   batch:
     jdbc:
       initialize-schema: always
     job:
-      enabled: true
-      name: migrateTxnHistoryJob
+      enabled: false
 
-app:
-  datasource:
-    source:
-      url: jdbc:postgresql://localhost:5432/core_db
-      username: core_user
-      password: core_password
-      driver-class-name: org.postgresql.Driver
-      hikari:
-        maximum-pool-size: 8
-        minimum-idle: 2
-
-migration:
-  chunk-size: 500
-  page-size: 500
-  fetch-size: 500
-  grid-size: 8
-  thread-pool-size: 8
-  source-table: transaction_history
-  service-a-upsert-url: http://localhost:8081/api/fin-txn/upsert
-  api-timeout: 30s
-
-logging:
-  level:
-    org.springframework.batch: INFO
+transaction-manager:
+  upsert-url: ${TRANSACTION_MANAGER_UPSERT_URL:http://localhost:8181/api/fin-txt/upsert}
